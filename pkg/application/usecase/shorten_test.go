@@ -28,7 +28,7 @@ func TestShortenUseCase_Do(t *testing.T) {
 	assert.NotNil(t, res.ShortenedURL)
 }
 
-func TestShortenUseCase_Do_WhenNotValidUrlShouldReturnError(t *testing.T) {
+func TestShortenUseCase_Do_WhenInvalidUrlShouldReturnError(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
 	u := NewShortenUseCase(&r)
 	d := dto.ShortenDTO{URL: "InvalidUrl"}
