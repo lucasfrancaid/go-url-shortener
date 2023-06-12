@@ -17,6 +17,9 @@ func NewHttpServer() {
 	redirectHandler := http.HandlerFunc(standard_router.Redirect)
 	mux.Handle("/u/", redirectHandler)
 
+	statsHandler := http.HandlerFunc(standard_router.Stats)
+	mux.Handle("/stats/", statsHandler)
+
 	port := fmt.Sprintf(":%s", "3333")
 	log.Println("Server listening on port", port)
 	_ = http.ListenAndServe(port, mux)

@@ -79,3 +79,42 @@ func TestShortenerController_Redirect_WhenDoesNotExistShouldReturnErrorAndNotFou
 	assert.Nil(t, p.Data)
 	assert.Equal(t, presenter.NOT_FOUND_ERROR_CODE, p.StatusCode)
 }
+
+func TestShortenerController_Stats(t *testing.T) {
+	r := adapter.NewShortenerRepositoryInMemory()
+	m := domain.Shortener{HashedURL: "abcdefgh", URL: "https://any.com"}
+	r.Add(m)
+
+	c := NewShortenerController(&r)
+	d := dto.ShortenedDTO{ShortenedURL: m.HashedURL}
+
+	p := c.Stats(d)
+
+	assert.Nil(t, p.Error)
+	assert.NotNil(t, p.Data)
+	assert.Equal(t, presenter.REDIRECT_CODE, p.StatusCode)
+}
+
+func TestShortenerController_Stats_WhenInvalidShortenedUrlShouldReturnErrorAndValidatorErrorStatusCode(t *testing.T) {
+	r := adapter.NewShortenerRepositoryInMemory()
+	c := NewShortenerController(&r)
+	d := dto.ShortenedDTO{ShortenedURL: "xxx"}
+
+	p := c.Stats(d)
+
+	assert.NotNil(t, p.Error)
+	assert.Nil(t, p.Data)
+	assert.Equal(t, presenter.VALIDATION_ERROR_CODE, p.StatusCode)
+}
+
+func TestShortenerController_Stats_WhenDoesNotExistShouldReturnErrorAndNotFoundErrorStatusCode(t *testing.T) {
+	r := adapter.NewShortenerRepositoryInMemory()
+	c := NewShortenerController(&r)
+	d := dto.ShortenedDTO{ShortenedURL: "validurl"}
+
+	p := c.Stats(d)
+
+	assert.NotNil(t, p.Error)
+	assert.Nil(t, p.Data)
+	assert.Equal(t, presenter.NOT_FOUND_ERROR_CODE, p.StatusCode)
+}
