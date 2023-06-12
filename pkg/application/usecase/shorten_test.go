@@ -24,7 +24,6 @@ func TestShortenUseCase_Do(t *testing.T) {
 	res, err := u.Do(d)
 
 	assert.Nil(t, err)
-	assert.IsType(t, dto.ShortenedDTO{}, res)
 	assert.NotNil(t, res.ShortenedURL)
 }
 

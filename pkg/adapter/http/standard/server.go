@@ -14,6 +14,9 @@ func NewHttpServer() {
 	shortenHandler := http.HandlerFunc(standard_router.Shorten)
 	mux.Handle("/shorten", shortenHandler)
 
+	redirectHandler := http.HandlerFunc(standard_router.Redirect)
+	mux.Handle("/u/", redirectHandler)
+
 	port := fmt.Sprintf(":%s", "3333")
 	log.Println("Server listening on port", port)
 	_ = http.ListenAndServe(port, mux)

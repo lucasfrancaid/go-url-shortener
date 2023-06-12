@@ -23,3 +23,12 @@ func (c *ShortenerController) Shorten(d dto.ShortenDTO) presenter.Presenter {
 	}
 	return presenter.PresenterSuccess(r)
 }
+
+func (c *ShortenerController) Redirect(d dto.ShortenedDTO) presenter.Presenter {
+	u := usecase.NewRedirectUseCase(c.shortenerRepository)
+	r, err := u.Do(d)
+	if err != nil {
+		return presenter.PresenterError(err)
+	}
+	return presenter.PresenterRedirect(r)
+}
