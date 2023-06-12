@@ -7,8 +7,8 @@ import (
 
 	"crypto/md5"
 
+	base "github.com/lucasfrancaid/go-url-shortener/pkg/application/base"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
-	base "github.com/lucasfrancaid/go-url-shortener/pkg/application/error"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/domain"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 )

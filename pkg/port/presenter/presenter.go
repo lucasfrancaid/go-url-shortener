@@ -3,7 +3,7 @@ package presenter
 import (
 	"encoding/json"
 
-	base "github.com/lucasfrancaid/go-url-shortener/pkg/application/error"
+	base "github.com/lucasfrancaid/go-url-shortener/pkg/application/base"
 )
 
 type status int
