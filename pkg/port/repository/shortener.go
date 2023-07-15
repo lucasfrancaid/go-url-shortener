@@ -6,4 +6,5 @@ type ShortenerRepository interface {
 	Add(entity domain.Shortener) error
 	Read(HashedURL string) (domain.Shortener, error)
 	Stats(HashedURL string) (domain.ShortenerStats, error)
+	Exists(HashedURL string) (domain.Shortener, error)
 }

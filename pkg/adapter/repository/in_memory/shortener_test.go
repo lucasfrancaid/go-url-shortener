@@ -10,7 +10,7 @@ import (
 func TestNewShortenerRepositoryInMemory(t *testing.T) {
 	r := NewShortenerRepositoryInMemory()
 
-	assert.IsType(t, ShortenerRepositoryInMemory{}, r)
+	assert.IsType(t, &ShortenerRepositoryInMemory{}, r)
 	assert.NotNil(t, r.storage)
 	assert.NotNil(t, r.counter)
 }

@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure"
 	standard_router "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/http/standard/router"
 )
 
@@ -20,7 +21,11 @@ func NewHttpServer() {
 	statsHandler := http.HandlerFunc(standard_router.Stats)
 	mux.Handle("/stats/", statsHandler)
 
-	port := fmt.Sprintf(":%s", "3333")
+	settings := infrastructure.Settings()
+	port := fmt.Sprintf(":%s", settings.PORT)
+
 	log.Println("Server listening on port", port)
+	log.Println("Repository defined is:", settings.REPOSITORY_ADAPTER)
+
 	_ = http.ListenAndServe(port, mux)
 }

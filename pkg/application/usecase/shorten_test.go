@@ -10,7 +10,7 @@ import (
 
 func TestNewShortenUseCase(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	u := NewShortenUseCase(&r)
+	u := NewShortenUseCase(r)
 
 	assert.IsType(t, ShortenUseCase{}, u)
 	assert.IsType(t, &adapter.ShortenerRepositoryInMemory{}, u.shortenerRepository)
@@ -18,7 +18,7 @@ func TestNewShortenUseCase(t *testing.T) {
 
 func TestShortenUseCase_Do(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	u := NewShortenUseCase(&r)
+	u := NewShortenUseCase(r)
 	d := dto.ShortenDTO{URL: "https://lucasfrancaid.com.br"}
 
 	res, err := u.Do(d)
@@ -29,7 +29,7 @@ func TestShortenUseCase_Do(t *testing.T) {
 
 func TestShortenUseCase_Do_WhenInvalidUrlShouldReturnError(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	u := NewShortenUseCase(&r)
+	u := NewShortenUseCase(r)
 	d := dto.ShortenDTO{URL: "InvalidUrl"}
 
 	_, err := u.Do(d)

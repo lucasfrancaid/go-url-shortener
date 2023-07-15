@@ -7,6 +7,7 @@ import (
 
 	"crypto/md5"
 
+	"github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure"
 	base "github.com/lucasfrancaid/go-url-shortener/pkg/application/base"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/domain"
@@ -28,7 +29,7 @@ func (u *ShortenUseCase) Do(d dto.ShortenDTO) (dto.ShortenedDTO, error) {
 	}
 
 	shortenedURL := u.short(d.URL)
-	persisted, err := u.shortenerRepository.Read(shortenedURL)
+	persisted, err := u.shortenerRepository.Exists(shortenedURL)
 	if err == nil {
 		if persisted.URL == d.URL {
 			return u.toOutputDTO(persisted), nil
@@ -63,6 +64,7 @@ func (u *ShortenUseCase) short(URL string) string {
 }
 
 func (u *ShortenUseCase) toOutputDTO(entity domain.Shortener) dto.ShortenedDTO {
-	sURL := "http://localhost:3333/u/" + entity.HashedURL
+	domain := infrastructure.Settings().DOMAIN
+	sURL := domain + "/u/" + entity.HashedURL
 	return dto.ShortenedDTO{ShortenedURL: sURL}
 }

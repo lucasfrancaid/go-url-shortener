@@ -11,7 +11,7 @@ import (
 
 func TestNewRedirectUseCase(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	u := NewRedirectUseCase(&r)
+	u := NewRedirectUseCase(r)
 
 	assert.IsType(t, RedirectUseCase{}, u)
 	assert.IsType(t, &adapter.ShortenerRepositoryInMemory{}, u.shortenerRepository)
@@ -22,7 +22,7 @@ func TestRedirectUseCase_Do(t *testing.T) {
 	m := domain.Shortener{HashedURL: "abcdefgh", URL: "https://any.com"}
 	r.Add(m)
 
-	u := NewRedirectUseCase(&r)
+	u := NewRedirectUseCase(r)
 	d := dto.ShortenedDTO{ShortenedURL: m.HashedURL}
 
 	res, err := u.Do(d)
@@ -34,7 +34,7 @@ func TestRedirectUseCase_Do(t *testing.T) {
 func TestRedirectUseCase_Do_WhenInvalidHashedUrlShouldReturnError(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
 
-	u := NewRedirectUseCase(&r)
+	u := NewRedirectUseCase(r)
 	d := dto.ShortenedDTO{ShortenedURL: "invalid"}
 
 	_, err := u.Do(d)

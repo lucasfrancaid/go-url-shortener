@@ -11,7 +11,7 @@ import (
 
 func TestNewStatsUseCase(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	u := NewStatsUseCase(&r)
+	u := NewStatsUseCase(r)
 
 	assert.IsType(t, StatsUseCase{}, u)
 	assert.IsType(t, &adapter.ShortenerRepositoryInMemory{}, u.shortenerRepository)
@@ -23,7 +23,7 @@ func TestStatsUseCase_Do(t *testing.T) {
 	r.Add(m)
 	r.Read(m.HashedURL)
 
-	u := NewStatsUseCase(&r)
+	u := NewStatsUseCase(r)
 	d := dto.ShortenedDTO{ShortenedURL: m.HashedURL}
 
 	res, err := u.Do(d)
@@ -35,7 +35,7 @@ func TestStatsUseCase_Do(t *testing.T) {
 func TestStatsUseCase_Do_WhenInvalidShortenedUrlShouldReturnError(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
 
-	u := NewStatsUseCase(&r)
+	u := NewStatsUseCase(r)
 	d := dto.ShortenedDTO{ShortenedURL: "invalid"}
 
 	_, err := u.Do(d)

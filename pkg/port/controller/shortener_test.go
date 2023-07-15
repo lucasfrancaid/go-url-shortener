@@ -12,14 +12,14 @@ import (
 
 func TestNewShortenerController(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	c := NewShortenerController(&r)
+	c := NewShortenerController(r)
 
 	assert.IsType(t, ShortenerController{}, c)
 }
 
 func TestShortenerController_Shorten(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	c := NewShortenerController(&r)
+	c := NewShortenerController(r)
 	d := dto.ShortenDTO{URL: "https://github.com/lucasfrancaid"}
 
 	p := c.Shorten(d)
@@ -31,7 +31,7 @@ func TestShortenerController_Shorten(t *testing.T) {
 
 func TestShortenerController_Shorten_WhenInvalidUrlShouldReturnErrorAndValidatorErrorStatusCode(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	c := NewShortenerController(&r)
+	c := NewShortenerController(r)
 	d := dto.ShortenDTO{URL: "xxx"}
 
 	p := c.Shorten(d)
@@ -46,7 +46,7 @@ func TestShortenerController_Redirect(t *testing.T) {
 	m := domain.Shortener{HashedURL: "abcdefgh", URL: "https://any.com"}
 	r.Add(m)
 
-	c := NewShortenerController(&r)
+	c := NewShortenerController(r)
 	d := dto.ShortenedDTO{ShortenedURL: m.HashedURL}
 
 	p := c.Redirect(d)
@@ -58,7 +58,7 @@ func TestShortenerController_Redirect(t *testing.T) {
 
 func TestShortenerController_Redirect_WhenInvalidHashedUrlShouldReturnErrorAndValidatorErrorStatusCode(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	c := NewShortenerController(&r)
+	c := NewShortenerController(r)
 	d := dto.ShortenedDTO{ShortenedURL: "xxx"}
 
 	p := c.Redirect(d)
@@ -70,7 +70,7 @@ func TestShortenerController_Redirect_WhenInvalidHashedUrlShouldReturnErrorAndVa
 
 func TestShortenerController_Redirect_WhenDoesNotExistShouldReturnErrorAndNotFoundErrorStatusCode(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	c := NewShortenerController(&r)
+	c := NewShortenerController(r)
 	d := dto.ShortenedDTO{ShortenedURL: "validurl"}
 
 	p := c.Redirect(d)
@@ -85,7 +85,7 @@ func TestShortenerController_Stats(t *testing.T) {
 	m := domain.Shortener{HashedURL: "abcdefgh", URL: "https://any.com"}
 	r.Add(m)
 
-	c := NewShortenerController(&r)
+	c := NewShortenerController(r)
 	d := dto.ShortenedDTO{ShortenedURL: m.HashedURL}
 
 	p := c.Stats(d)
@@ -97,7 +97,7 @@ func TestShortenerController_Stats(t *testing.T) {
 
 func TestShortenerController_Stats_WhenInvalidShortenedUrlShouldReturnErrorAndValidatorErrorStatusCode(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	c := NewShortenerController(&r)
+	c := NewShortenerController(r)
 	d := dto.ShortenedDTO{ShortenedURL: "xxx"}
 
 	p := c.Stats(d)
@@ -109,7 +109,7 @@ func TestShortenerController_Stats_WhenInvalidShortenedUrlShouldReturnErrorAndVa
 
 func TestShortenerController_Stats_WhenDoesNotExistShouldReturnErrorAndNotFoundErrorStatusCode(t *testing.T) {
 	r := adapter.NewShortenerRepositoryInMemory()
-	c := NewShortenerController(&r)
+	c := NewShortenerController(r)
 	d := dto.ShortenedDTO{ShortenedURL: "validurl"}
 
 	p := c.Stats(d)
