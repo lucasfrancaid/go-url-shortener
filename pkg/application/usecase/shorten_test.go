@@ -3,21 +3,23 @@ package usecase
 import (
 	"testing"
 
-	adapter "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/repository/in_memory"
+	factory "github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/factory/repository"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
+	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewShortenUseCase(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	u := NewShortenUseCase(r)
 
 	assert.IsType(t, ShortenUseCase{}, u)
-	assert.IsType(t, &adapter.ShortenerRepositoryInMemory{}, u.shortenerRepository)
+	assert.Implements(t, (*repository.ShortenerRepository)(nil), u.shortenerRepository)
+
 }
 
 func TestShortenUseCase_Do(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	u := NewShortenUseCase(r)
 	d := dto.ShortenDTO{URL: "https://lucasfrancaid.com.br"}
 
@@ -28,7 +30,7 @@ func TestShortenUseCase_Do(t *testing.T) {
 }
 
 func TestShortenUseCase_Do_WhenInvalidUrlShouldReturnError(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	u := NewShortenUseCase(r)
 	d := dto.ShortenDTO{URL: "InvalidUrl"}
 

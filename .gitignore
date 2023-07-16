@@ -20,6 +20,10 @@
 # Go workspace file
 go.work
 
+# Environment config
+/configs/config.*
+.env
+
 # Misc
 client.http
 coverage.*

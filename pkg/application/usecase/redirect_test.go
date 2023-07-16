@@ -3,22 +3,23 @@ package usecase
 import (
 	"testing"
 
-	adapter "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/repository/in_memory"
+	factory "github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/factory/repository"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/domain"
+	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewRedirectUseCase(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	u := NewRedirectUseCase(r)
 
 	assert.IsType(t, RedirectUseCase{}, u)
-	assert.IsType(t, &adapter.ShortenerRepositoryInMemory{}, u.shortenerRepository)
+	assert.Implements(t, (*repository.ShortenerRepository)(nil), u.shortenerRepository)
 }
 
 func TestRedirectUseCase_Do(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	m := domain.Shortener{HashedURL: "abcdefgh", URL: "https://any.com"}
 	r.Add(m)
 
@@ -32,7 +33,7 @@ func TestRedirectUseCase_Do(t *testing.T) {
 }
 
 func TestRedirectUseCase_Do_WhenInvalidHashedUrlShouldReturnError(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 
 	u := NewRedirectUseCase(r)
 	d := dto.ShortenedDTO{ShortenedURL: "invalid"}

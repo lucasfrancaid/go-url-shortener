@@ -4,10 +4,10 @@ URL Shortener implemented using Go with Clean Architecture as architecture desig
 ![System Design Image](./assets/images/System%20Design%402x.png)
 
 ## Infrastructure
-* ⭕ Environment settings
+* ✅ Environment settings with Viper
 * ⭕ Docker Image
-* ⭕ Docker Compose
-* ⭕ Dependency Injection for Adapters (Maybe a CLI?)
+* 🔄 Docker Compose
+* ✅ Dependency Injection for Adapters (Improve it)
 * ⭕ OpenAPI Documentation/Swagger
 * ⭕ CI&CD/Deploy
 
@@ -24,5 +24,5 @@ Built-in:
 * ✅ In Memory
 
 External:
-* ⭕ Memcached
+* ✅ Memcached
 * ⭕ Redis

@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure"
+	"github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/config"
 	standard_router "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/http/standard/router"
 )
 
@@ -21,7 +21,7 @@ func NewHttpServer() {
 	statsHandler := http.HandlerFunc(standard_router.Stats)
 	mux.Handle("/stats/", statsHandler)
 
-	settings := infrastructure.Settings()
+	settings := config.GetSettings()
 	port := fmt.Sprintf(":%s", settings.PORT)
 
 	log.Println("Server listening on port", port)

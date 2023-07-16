@@ -6,6 +6,7 @@ import (
 	adapter "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/repository/in_memory"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/domain"
+	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,7 +15,7 @@ func TestNewStatsUseCase(t *testing.T) {
 	u := NewStatsUseCase(r)
 
 	assert.IsType(t, StatsUseCase{}, u)
-	assert.IsType(t, &adapter.ShortenerRepositoryInMemory{}, u.shortenerRepository)
+	assert.Implements(t, (*repository.ShortenerRepository)(nil), u.shortenerRepository)
 }
 
 func TestStatsUseCase_Do(t *testing.T) {
