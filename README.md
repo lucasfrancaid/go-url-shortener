@@ -25,7 +25,7 @@ Built-in:
 
 External:
 * ✅ Memcached
-* ⭕ Redis
+* ✅ Redis
 
 ## To Do
 * ⭕ Improve adapter tests (run just when flaged to run, because generally is necessary to setup the infrastructure)

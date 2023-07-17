@@ -15,6 +15,9 @@ type Settings struct {
 	DOMAIN             string
 	REPOSITORY_ADAPTER string
 	MEMCACHED_URL      string
+	REDIS_URL          string
+	REDIS_PASSWORD     string
+	REDIS_DB           int
 }
 
 var settings *Settings
@@ -45,15 +48,14 @@ func GetSettings() *Settings {
 		DOMAIN:             viper.GetString("DOMAIN"),
 		REPOSITORY_ADAPTER: viper.GetString("REPOSITORY_ADAPTER"),
 		MEMCACHED_URL:      viper.GetString("MEMCACHED_URL"),
+		REDIS_URL:          viper.GetString("REDIS_URL"),
+		REDIS_PASSWORD:     viper.GetString("REDIS_PASSWORD"),
+		REDIS_DB:           viper.GetInt("REDIS_DB"),
 	}
 
 	if settings.DOMAIN == "" {
 		log.Println("Solving domain...")
 		settings.DOMAIN = fmt.Sprintf("http://localhost:%s", settings.PORT)
-	}
-
-	if settings.ENV == "test" {
-		settings.REPOSITORY_ADAPTER = "in_memory"
 	}
 
 	log.Printf("Environment variables setted in %s environment", settings.ENV)

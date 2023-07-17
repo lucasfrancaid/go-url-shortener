@@ -4,11 +4,14 @@ import (
 	"github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/config"
 	in_memory "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/repository/in_memory"
 	memcached "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/repository/memcached"
+	redis "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/repository/redis"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 )
 
 func NewShortenerRepository() repository.ShortenerRepository {
 	switch config.GetSettings().REPOSITORY_ADAPTER {
+	case "redis":
+		return redis.NewShortenerRepositoryRedis()
 	case "memcached":
 		return memcached.NewShortenerRepositoryMemcached()
 	default:
@@ -18,6 +21,8 @@ func NewShortenerRepository() repository.ShortenerRepository {
 
 func NewShortenerStatsRepository() repository.ShortenerStatsRepository {
 	switch config.GetSettings().REPOSITORY_ADAPTER {
+	case "redis":
+		return redis.NewShortenerStatsRepositoryRedis()
 	case "memcached":
 		return memcached.NewShortenerStatsRepositoryMemcached()
 	default:
