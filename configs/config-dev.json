@@ -1,4 +1,5 @@
 {
     "PORT": 3000,
-    "REPOSITORY_ADAPTER": "memcached"
+    "REPOSITORY_ADAPTER": "memcached",
+    "MEMCACHED_URL": "localhost:11211"
 }

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"strings"
 
 	base "github.com/lucasfrancaid/go-url-shortener/pkg/application/base"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
@@ -22,7 +23,14 @@ func (u *RedirectUseCase) Do(d dto.ShortenedDTO) (dto.RedirectDTO, error) {
 	}
 	entity, err := u.shortenerRepository.Read(d.ShortenedURL)
 	if err != nil {
-		return dto.RedirectDTO{}, &base.Error{Type: base.NOT_FOUND_ERROR, Err: err}
+		if baseErr, ok := err.(*base.Error); ok {
+			err = baseErr
+		} else if strings.Contains(err.Error(), "not found") {
+			err = &base.Error{Type: base.NOT_FOUND_ERROR, Err: err}
+		} else {
+			err = &base.Error{Type: base.INTERNAL_ERROR, Err: err}
+		}
+		return dto.RedirectDTO{}, err
 	}
 	return dto.RedirectDTO{URL: entity.URL}, nil
 }

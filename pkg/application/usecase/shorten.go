@@ -43,7 +43,12 @@ func (u *ShortenUseCase) Do(d dto.ShortenDTO) (dto.ShortenedDTO, error) {
 	entity := domain.Shortener{HashedURL: shortenedURL, URL: d.URL}
 	err = u.shortenerRepository.Add(entity)
 	if err != nil {
-		return dto.ShortenedDTO{}, &base.Error{Type: base.INTERNAL_ERROR, Err: err}
+		if baseErr, ok := err.(*base.Error); ok {
+			err = baseErr
+		} else {
+			err = &base.Error{Type: base.INTERNAL_ERROR, Err: err}
+		}
+		return dto.ShortenedDTO{}, err
 	}
 
 	return u.toOutputDTO(entity), nil

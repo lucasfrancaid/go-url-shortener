@@ -3,7 +3,7 @@ package controller
 import (
 	"testing"
 
-	adapter "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/repository/in_memory"
+	factory "github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/factory/repository"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/domain"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/port/presenter"
@@ -11,14 +11,14 @@ import (
 )
 
 func TestNewShortenerController(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	c := NewShortenerController(r)
 
 	assert.IsType(t, ShortenerController{}, c)
 }
 
 func TestShortenerController_Shorten(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	c := NewShortenerController(r)
 	d := dto.ShortenDTO{URL: "https://github.com/lucasfrancaid"}
 
@@ -30,7 +30,7 @@ func TestShortenerController_Shorten(t *testing.T) {
 }
 
 func TestShortenerController_Shorten_WhenInvalidUrlShouldReturnErrorAndValidatorErrorStatusCode(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	c := NewShortenerController(r)
 	d := dto.ShortenDTO{URL: "xxx"}
 
@@ -42,7 +42,7 @@ func TestShortenerController_Shorten_WhenInvalidUrlShouldReturnErrorAndValidator
 }
 
 func TestShortenerController_Redirect(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	m := domain.Shortener{HashedURL: "abcdefgh", URL: "https://any.com"}
 	r.Add(m)
 
@@ -57,7 +57,7 @@ func TestShortenerController_Redirect(t *testing.T) {
 }
 
 func TestShortenerController_Redirect_WhenInvalidHashedUrlShouldReturnErrorAndValidatorErrorStatusCode(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	c := NewShortenerController(r)
 	d := dto.ShortenedDTO{ShortenedURL: "xxx"}
 
@@ -69,7 +69,7 @@ func TestShortenerController_Redirect_WhenInvalidHashedUrlShouldReturnErrorAndVa
 }
 
 func TestShortenerController_Redirect_WhenDoesNotExistShouldReturnErrorAndNotFoundErrorStatusCode(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	c := NewShortenerController(r)
 	d := dto.ShortenedDTO{ShortenedURL: "validurl"}
 
@@ -81,7 +81,7 @@ func TestShortenerController_Redirect_WhenDoesNotExistShouldReturnErrorAndNotFou
 }
 
 func TestShortenerController_Stats(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	m := domain.Shortener{HashedURL: "abcdefgh", URL: "https://any.com"}
 	r.Add(m)
 
@@ -96,7 +96,7 @@ func TestShortenerController_Stats(t *testing.T) {
 }
 
 func TestShortenerController_Stats_WhenInvalidShortenedUrlShouldReturnErrorAndValidatorErrorStatusCode(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	c := NewShortenerController(r)
 	d := dto.ShortenedDTO{ShortenedURL: "xxx"}
 
@@ -108,7 +108,7 @@ func TestShortenerController_Stats_WhenInvalidShortenedUrlShouldReturnErrorAndVa
 }
 
 func TestShortenerController_Stats_WhenDoesNotExistShouldReturnErrorAndNotFoundErrorStatusCode(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	r := factory.NewShortenerRepository()
 	c := NewShortenerController(r)
 	d := dto.ShortenedDTO{ShortenedURL: "validurl"}
 

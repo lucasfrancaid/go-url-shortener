@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/gob"
 	"errors"
+	"strings"
 
 	"github.com/bradfitz/gomemcache/memcache"
+	"github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/config"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/domain"
 )
 
@@ -20,7 +22,7 @@ type itemValue struct {
 
 func NewShortenerRepositoryMemcached() *ShortenerRepositoryMemcached {
 	return &ShortenerRepositoryMemcached{
-		mc: memcache.New("localhost:11211"),
+		mc: memcache.New(config.GetSettings().MEMCACHED_URL),
 	}
 }
 
@@ -33,14 +35,17 @@ func (r *ShortenerRepositoryMemcached) set(Key string, Value itemValue) error {
 	}
 
 	item := &memcache.Item{Key: Key, Value: []byte(buffer.Bytes())}
-	r.mc.Set(item)
+	err = r.mc.Set(item)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (r *ShortenerRepositoryMemcached) get(Key string) (itemValue, error) {
 	item, err := r.mc.Get(Key)
 	if err != nil {
-		if err.Error() == "memcache: cache miss" {
+		if strings.Contains(err.Error(), "memcache: cache miss") {
 			err = errors.New("HashedURL not found")
 		}
 		return itemValue{}, err
@@ -63,7 +68,10 @@ func (r *ShortenerRepositoryMemcached) Add(entity domain.Shortener) error {
 		return nil
 	}
 	value := itemValue{URL: entity.URL, Counter: int64(0)}
-	r.set(entity.HashedURL, value)
+	err := r.set(entity.HashedURL, value)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

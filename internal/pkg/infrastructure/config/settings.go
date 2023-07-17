@@ -14,6 +14,7 @@ type Settings struct {
 	PORT               string
 	DOMAIN             string
 	REPOSITORY_ADAPTER string
+	MEMCACHED_URL      string
 }
 
 var settings *Settings
@@ -43,6 +44,7 @@ func GetSettings() *Settings {
 		PORT:               viper.GetString("PORT"),
 		DOMAIN:             viper.GetString("DOMAIN"),
 		REPOSITORY_ADAPTER: viper.GetString("REPOSITORY_ADAPTER"),
+		MEMCACHED_URL:      viper.GetString("MEMCACHED_URL"),
 	}
 
 	if settings.DOMAIN == "" {
