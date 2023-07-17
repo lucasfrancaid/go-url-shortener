@@ -11,16 +11,18 @@ import (
 
 type RedirectUseCase struct {
 	shortenerRepository repository.ShortenerRepository
+	statsRepository     repository.ShortenerStatsRepository
 }
 
-func NewRedirectUseCase(shortenerRepository repository.ShortenerRepository) RedirectUseCase {
-	return RedirectUseCase{shortenerRepository: shortenerRepository}
+func NewRedirectUseCase(shortenerRepository repository.ShortenerRepository, statsRepository repository.ShortenerStatsRepository) RedirectUseCase {
+	return RedirectUseCase{shortenerRepository: shortenerRepository, statsRepository: statsRepository}
 }
 
 func (u *RedirectUseCase) Do(d dto.ShortenedDTO) (dto.RedirectDTO, error) {
 	if err := u.validate(&d); err != nil {
 		return dto.RedirectDTO{}, &base.Error{Type: base.VALIDATOR_ERROR, Err: err}
 	}
+
 	entity, err := u.shortenerRepository.Read(d.ShortenedURL)
 	if err != nil {
 		if baseErr, ok := err.(*base.Error); ok {
@@ -32,6 +34,9 @@ func (u *RedirectUseCase) Do(d dto.ShortenedDTO) (dto.RedirectDTO, error) {
 		}
 		return dto.RedirectDTO{}, err
 	}
+
+	u.statsRepository.Increment(d.ShortenedURL)
+
 	return dto.RedirectDTO{URL: entity.URL}, nil
 }
 

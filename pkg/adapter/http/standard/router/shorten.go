@@ -27,8 +27,9 @@ func Shorten(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	repo := factory.NewShortenerRepository()
-	ctl := controller.NewShortenerController(repo)
+	shortenerRepo := factory.NewShortenerRepository()
+	statsRepo := factory.NewShortenerStatsRepository()
+	ctl := controller.NewShortenerController(shortenerRepo, statsRepo)
 	pre := ctl.Shorten(payload)
 	res := pre.HTTP()
 

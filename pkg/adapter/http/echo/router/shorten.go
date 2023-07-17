@@ -13,8 +13,9 @@ func Shorten(c echo.Context) error {
 		return err
 	}
 
-	repo := factory.NewShortenerRepository()
-	ctl := controller.NewShortenerController(repo)
+	shortenerRepo := factory.NewShortenerRepository()
+	statsRepo := factory.NewShortenerStatsRepository()
+	ctl := controller.NewShortenerController(shortenerRepo, statsRepo)
 	pre := ctl.Shorten(*d)
 	res := pre.HTTP()
 

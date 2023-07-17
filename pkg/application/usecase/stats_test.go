@@ -3,29 +3,30 @@ package usecase
 import (
 	"testing"
 
-	adapter "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/repository/in_memory"
+	factory "github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/factory/repository"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
-	"github.com/lucasfrancaid/go-url-shortener/pkg/domain"
-	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
+	usecase_test "github.com/lucasfrancaid/go-url-shortener/pkg/application/usecase/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewStatsUseCase(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	teardownTest := usecase_test.SetupUseCaseTest(t, nil, nil)
+	defer teardownTest(t)
+
+	r := factory.NewShortenerStatsRepository()
 	u := NewStatsUseCase(r)
 
 	assert.IsType(t, StatsUseCase{}, u)
-	assert.Implements(t, (*repository.ShortenerRepository)(nil), u.shortenerRepository)
 }
 
 func TestStatsUseCase_Do(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
-	m := domain.Shortener{HashedURL: "abcdefgh", URL: "https://any.com"}
-	r.Add(m)
-	r.Read(m.HashedURL)
+	hashedURL := "abcdefgh"
+	teardownTest := usecase_test.SetupUseCaseTest(t, nil, hashedURL)
+	defer teardownTest(t)
 
+	r := factory.NewShortenerStatsRepository()
 	u := NewStatsUseCase(r)
-	d := dto.ShortenedDTO{ShortenedURL: m.HashedURL}
+	d := dto.ShortenedDTO{ShortenedURL: hashedURL}
 
 	res, err := u.Do(d)
 
@@ -34,8 +35,10 @@ func TestStatsUseCase_Do(t *testing.T) {
 }
 
 func TestStatsUseCase_Do_WhenInvalidShortenedUrlShouldReturnError(t *testing.T) {
-	r := adapter.NewShortenerRepositoryInMemory()
+	teardownTest := usecase_test.SetupUseCaseTest(t, nil, nil)
+	defer teardownTest(t)
 
+	r := factory.NewShortenerStatsRepository()
 	u := NewStatsUseCase(r)
 	d := dto.ShortenedDTO{ShortenedURL: "invalid"}
 
@@ -43,4 +46,19 @@ func TestStatsUseCase_Do_WhenInvalidShortenedUrlShouldReturnError(t *testing.T) 
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "HashedURL provided is invalid")
+}
+
+func TestStatsUseCase_Do_WhenShortenedUrlDoesNotExistShouldReturnError(t *testing.T) {
+	teardownTest := usecase_test.SetupUseCaseTest(t, nil, nil)
+	defer teardownTest(t)
+
+	r := factory.NewShortenerStatsRepository()
+
+	u := NewStatsUseCase(r)
+	d := dto.ShortenedDTO{ShortenedURL: "zxzcxzos"}
+
+	_, err := u.Do(d)
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "HashedURL not found")
 }

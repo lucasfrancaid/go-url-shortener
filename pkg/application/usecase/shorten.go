@@ -16,10 +16,11 @@ import (
 
 type ShortenUseCase struct {
 	shortenerRepository repository.ShortenerRepository
+	statsRepository     repository.ShortenerStatsRepository
 }
 
-func NewShortenUseCase(shortenerRepository repository.ShortenerRepository) ShortenUseCase {
-	return ShortenUseCase{shortenerRepository: shortenerRepository}
+func NewShortenUseCase(shortenerRepository repository.ShortenerRepository, statsRepository repository.ShortenerStatsRepository) ShortenUseCase {
+	return ShortenUseCase{shortenerRepository: shortenerRepository, statsRepository: statsRepository}
 }
 
 func (u *ShortenUseCase) Do(d dto.ShortenDTO) (dto.ShortenedDTO, error) {
@@ -29,7 +30,7 @@ func (u *ShortenUseCase) Do(d dto.ShortenDTO) (dto.ShortenedDTO, error) {
 	}
 
 	shortenedURL := u.short(d.URL)
-	persisted, err := u.shortenerRepository.Exists(shortenedURL)
+	persisted, err := u.shortenerRepository.Read(shortenedURL)
 	if err == nil {
 		if persisted.URL == d.URL {
 			return u.toOutputDTO(persisted), nil
@@ -50,6 +51,8 @@ func (u *ShortenUseCase) Do(d dto.ShortenDTO) (dto.ShortenedDTO, error) {
 		}
 		return dto.ShortenedDTO{}, err
 	}
+
+	u.statsRepository.Set(shortenedURL)
 
 	return u.toOutputDTO(entity), nil
 }

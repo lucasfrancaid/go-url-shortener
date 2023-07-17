@@ -10,18 +10,19 @@ import (
 )
 
 type StatsUseCase struct {
-	shortenerRepository repository.ShortenerRepository
+	statsRepository repository.ShortenerStatsRepository
 }
 
-func NewStatsUseCase(shortenerRepository repository.ShortenerRepository) StatsUseCase {
-	return StatsUseCase{shortenerRepository: shortenerRepository}
+func NewStatsUseCase(statsRepository repository.ShortenerStatsRepository) StatsUseCase {
+	return StatsUseCase{statsRepository: statsRepository}
 }
 
 func (u *StatsUseCase) Do(d dto.ShortenedDTO) (dto.ShortenerStatsDTO, error) {
 	if err := u.validate(&d); err != nil {
 		return dto.ShortenerStatsDTO{}, &base.Error{Type: base.VALIDATOR_ERROR, Err: err}
 	}
-	entity, err := u.shortenerRepository.Stats(d.ShortenedURL)
+
+	entity, err := u.statsRepository.Get(d.ShortenedURL)
 	if err != nil {
 		if baseErr, ok := err.(*base.Error); ok {
 			err = baseErr
@@ -32,6 +33,7 @@ func (u *StatsUseCase) Do(d dto.ShortenedDTO) (dto.ShortenerStatsDTO, error) {
 		}
 		return dto.ShortenerStatsDTO{}, err
 	}
+
 	return dto.ShortenerStatsDTO{Counter: entity.Counter}, nil
 }
 

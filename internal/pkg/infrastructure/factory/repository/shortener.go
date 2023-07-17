@@ -15,3 +15,12 @@ func NewShortenerRepository() repository.ShortenerRepository {
 		return in_memory.NewShortenerRepositoryInMemory()
 	}
 }
+
+func NewShortenerStatsRepository() repository.ShortenerStatsRepository {
+	switch config.GetSettings().REPOSITORY_ADAPTER {
+	case "memcached":
+		return memcached.NewShortenerStatsRepositoryMemcached()
+	default:
+		return in_memory.NewShortenerStatsRepositoryInMemory()
+	}
+}

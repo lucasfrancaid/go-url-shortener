@@ -5,41 +5,64 @@ import (
 
 	factory "github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/factory/repository"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
+	usecase_test "github.com/lucasfrancaid/go-url-shortener/pkg/application/usecase/test"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/domain"
-	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewRedirectUseCase(t *testing.T) {
+	teardownTest := usecase_test.SetupUseCaseTest(t, nil, nil)
+	defer teardownTest(t)
+
 	r := factory.NewShortenerRepository()
-	u := NewRedirectUseCase(r)
+	sr := factory.NewShortenerStatsRepository()
+	u := NewRedirectUseCase(r, sr)
 
 	assert.IsType(t, RedirectUseCase{}, u)
-	assert.Implements(t, (*repository.ShortenerRepository)(nil), u.shortenerRepository)
 }
 
 func TestRedirectUseCase_Do(t *testing.T) {
-	r := factory.NewShortenerRepository()
-	m := domain.Shortener{HashedURL: "abcdefgh", URL: "https://any.com"}
-	r.Add(m)
+	s := domain.Shortener{HashedURL: "abcdefgh", URL: "https://any.com"}
+	teardownTest := usecase_test.SetupUseCaseTest(t, s, nil)
+	defer teardownTest(t)
 
-	u := NewRedirectUseCase(r)
-	d := dto.ShortenedDTO{ShortenedURL: m.HashedURL}
+	r := factory.NewShortenerRepository()
+	sr := factory.NewShortenerStatsRepository()
+	u := NewRedirectUseCase(r, sr)
+	d := dto.ShortenedDTO{ShortenedURL: s.HashedURL}
 
 	res, err := u.Do(d)
 
 	assert.Nil(t, err)
-	assert.Equal(t, m.URL, res.URL)
+	assert.Equal(t, s.URL, res.URL)
 }
 
-func TestRedirectUseCase_Do_WhenInvalidHashedUrlShouldReturnError(t *testing.T) {
-	r := factory.NewShortenerRepository()
+func TestRedirectUseCase_Do_WhenInvalidShortnedUrlShouldReturnError(t *testing.T) {
+	teardownTest := usecase_test.SetupUseCaseTest(t, nil, nil)
+	defer teardownTest(t)
 
-	u := NewRedirectUseCase(r)
+	r := factory.NewShortenerRepository()
+	sr := factory.NewShortenerStatsRepository()
+	u := NewRedirectUseCase(r, sr)
 	d := dto.ShortenedDTO{ShortenedURL: "invalid"}
 
 	_, err := u.Do(d)
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "HashedURL provided is invalid")
+}
+
+func TestRedirectUseCase_Do_WhenShortenedUrlDoesNotExistShouldReturnError(t *testing.T) {
+	teardownTest := usecase_test.SetupUseCaseTest(t, nil, nil)
+	defer teardownTest(t)
+
+	r := factory.NewShortenerRepository()
+	sr := factory.NewShortenerStatsRepository()
+	u := NewRedirectUseCase(r, sr)
+	d := dto.ShortenedDTO{ShortenedURL: "zxzcxzos"}
+
+	_, err := u.Do(d)
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "HashedURL not found")
 }

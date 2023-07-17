@@ -11,8 +11,9 @@ func Redirect(c echo.Context) error {
 	shortenedURL := c.Param("shortenedURL")
 	d := dto.ShortenedDTO{ShortenedURL: shortenedURL}
 
-	repo := factory.NewShortenerRepository()
-	ctl := controller.NewShortenerController(repo)
+	shortenerRepo := factory.NewShortenerRepository()
+	statsRepo := factory.NewShortenerStatsRepository()
+	ctl := controller.NewShortenerController(shortenerRepo, statsRepo)
 	pre := ctl.Redirect(d)
 	res := pre.HTTP()
 

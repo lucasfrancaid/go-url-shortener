@@ -9,14 +9,15 @@ import (
 
 type ShortenerController struct {
 	shortenerRepository repository.ShortenerRepository
+	statsRepository     repository.ShortenerStatsRepository
 }
 
-func NewShortenerController(shortenerRepository repository.ShortenerRepository) ShortenerController {
-	return ShortenerController{shortenerRepository: shortenerRepository}
+func NewShortenerController(shortenerRepository repository.ShortenerRepository, statsRepository repository.ShortenerStatsRepository) ShortenerController {
+	return ShortenerController{shortenerRepository: shortenerRepository, statsRepository: statsRepository}
 }
 
 func (c *ShortenerController) Shorten(d dto.ShortenDTO) presenter.Presenter {
-	u := usecase.NewShortenUseCase(c.shortenerRepository)
+	u := usecase.NewShortenUseCase(c.shortenerRepository, c.statsRepository)
 	r, err := u.Do(d)
 	if err != nil {
 		return presenter.PresenterError(err)
@@ -25,7 +26,7 @@ func (c *ShortenerController) Shorten(d dto.ShortenDTO) presenter.Presenter {
 }
 
 func (c *ShortenerController) Redirect(d dto.ShortenedDTO) presenter.Presenter {
-	u := usecase.NewRedirectUseCase(c.shortenerRepository)
+	u := usecase.NewRedirectUseCase(c.shortenerRepository, c.statsRepository)
 	r, err := u.Do(d)
 	if err != nil {
 		return presenter.PresenterError(err)
@@ -34,7 +35,7 @@ func (c *ShortenerController) Redirect(d dto.ShortenedDTO) presenter.Presenter {
 }
 
 func (c *ShortenerController) Stats(d dto.ShortenedDTO) presenter.Presenter {
-	u := usecase.NewStatsUseCase(c.shortenerRepository)
+	u := usecase.NewStatsUseCase(c.statsRepository)
 	r, err := u.Do(d)
 	if err != nil {
 		return presenter.PresenterError(err)

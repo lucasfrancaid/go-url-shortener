@@ -19,8 +19,9 @@ func Stats(w http.ResponseWriter, r *http.Request) {
 	shortenedURL := r.URL.String()[sub : sub+8]
 	payload := dto.ShortenedDTO{ShortenedURL: shortenedURL}
 
-	repo := factory.NewShortenerRepository()
-	ctl := controller.NewShortenerController(repo)
+	shortenerRepo := factory.NewShortenerRepository()
+	statsRepo := factory.NewShortenerStatsRepository()
+	ctl := controller.NewShortenerController(shortenerRepo, statsRepo)
 	pre := ctl.Stats(payload)
 	res := pre.HTTP()
 
