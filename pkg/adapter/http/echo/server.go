@@ -13,7 +13,12 @@ import (
 func NewEchoServer() {
 	e := echo.New()
 
-	e.Use(middleware.Logger())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Skipper:          middleware.DefaultSkipper,
+		Format:           "${time_custom} ${status} ${latency_human} ${method} ${remote_ip} ${path}\n",
+		CustomTimeFormat: "2006/01/02 15:04:05",
+		Output:           e.Logger.Output(),
+	}))
 	e.Use(middleware.Recover())
 
 	e.POST("/shorten", echo_router.Shorten)

@@ -17,7 +17,7 @@ Built-in:
 
 External:
 * ✅ Echo
-* ⭕ Fiber
+* ✅ Fiber
 
 ## Repository Adapters
 Built-in:
