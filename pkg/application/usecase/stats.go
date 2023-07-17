@@ -4,17 +4,18 @@ import (
 	"errors"
 	"strings"
 
+	factory "github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/factory/repository"
 	base "github.com/lucasfrancaid/go-url-shortener/pkg/application/base"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 )
 
 type StatsUseCase struct {
-	statsRepository repository.ShortenerStatsRepository
+	StatsRepository repository.ShortenerStatsRepository
 }
 
-func NewStatsUseCase(statsRepository repository.ShortenerStatsRepository) StatsUseCase {
-	return StatsUseCase{statsRepository: statsRepository}
+func NewStatsUseCase() StatsUseCase {
+	return StatsUseCase{StatsRepository: factory.NewShortenerStatsRepository()}
 }
 
 func (u *StatsUseCase) Do(d dto.ShortenedDTO) (dto.ShortenerStatsDTO, error) {
@@ -22,7 +23,7 @@ func (u *StatsUseCase) Do(d dto.ShortenedDTO) (dto.ShortenerStatsDTO, error) {
 		return dto.ShortenerStatsDTO{}, &base.Error{Type: base.VALIDATOR_ERROR, Err: err}
 	}
 
-	entity, err := u.statsRepository.Get(d.ShortenedURL)
+	entity, err := u.StatsRepository.Get(d.ShortenedURL)
 	if err != nil {
 		if baseErr, ok := err.(*base.Error); ok {
 			err = baseErr

@@ -4,18 +4,22 @@ import (
 	"errors"
 	"strings"
 
+	factory "github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/factory/repository"
 	base "github.com/lucasfrancaid/go-url-shortener/pkg/application/base"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 )
 
 type RedirectUseCase struct {
-	shortenerRepository repository.ShortenerRepository
-	statsRepository     repository.ShortenerStatsRepository
+	ShortenerRepository repository.ShortenerRepository
+	StatsRepository     repository.ShortenerStatsRepository
 }
 
-func NewRedirectUseCase(shortenerRepository repository.ShortenerRepository, statsRepository repository.ShortenerStatsRepository) RedirectUseCase {
-	return RedirectUseCase{shortenerRepository: shortenerRepository, statsRepository: statsRepository}
+func NewRedirectUseCase() RedirectUseCase {
+	return RedirectUseCase{
+		ShortenerRepository: factory.NewShortenerRepository(),
+		StatsRepository:     factory.NewShortenerStatsRepository(),
+	}
 }
 
 func (u *RedirectUseCase) Do(d dto.ShortenedDTO) (dto.RedirectDTO, error) {
@@ -23,7 +27,7 @@ func (u *RedirectUseCase) Do(d dto.ShortenedDTO) (dto.RedirectDTO, error) {
 		return dto.RedirectDTO{}, &base.Error{Type: base.VALIDATOR_ERROR, Err: err}
 	}
 
-	entity, err := u.shortenerRepository.Read(d.ShortenedURL)
+	entity, err := u.ShortenerRepository.Read(d.ShortenedURL)
 	if err != nil {
 		if baseErr, ok := err.(*base.Error); ok {
 			err = baseErr
@@ -35,7 +39,7 @@ func (u *RedirectUseCase) Do(d dto.ShortenedDTO) (dto.RedirectDTO, error) {
 		return dto.RedirectDTO{}, err
 	}
 
-	u.statsRepository.Increment(d.ShortenedURL)
+	u.StatsRepository.Increment(d.ShortenedURL)
 
 	return dto.RedirectDTO{URL: entity.URL}, nil
 }

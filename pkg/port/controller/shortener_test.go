@@ -45,9 +45,7 @@ func TestNewShortenerController(t *testing.T) {
 	teardownTest := setupShortenerControllerTest(t, nil, nil)
 	defer teardownTest(t)
 
-	r := factory.NewShortenerRepository()
-	sr := factory.NewShortenerStatsRepository()
-	c := NewShortenerController(r, sr)
+	c := NewShortenerController()
 
 	assert.IsType(t, ShortenerController{}, c)
 }
@@ -56,9 +54,7 @@ func TestShortenerController_Shorten_WhenValidDTOShouldReturnPresenterWithSucces
 	teardownTest := setupShortenerControllerTest(t, nil, nil)
 	defer teardownTest(t)
 
-	r := factory.NewShortenerRepository()
-	sr := factory.NewShortenerStatsRepository()
-	c := NewShortenerController(r, sr)
+	c := NewShortenerController()
 	d := dto.ShortenDTO{URL: "https://github.com/lucasfrancaid"}
 
 	p := c.Shorten(d)
@@ -73,9 +69,7 @@ func TestShortenerController_Shorten_WhenInvalidDTOShouldReturnPresenterWithErro
 	teardownTest := setupShortenerControllerTest(t, nil, nil)
 	defer teardownTest(t)
 
-	r := factory.NewShortenerRepository()
-	sr := factory.NewShortenerStatsRepository()
-	c := NewShortenerController(r, sr)
+	c := NewShortenerController()
 	d := dto.ShortenDTO{URL: "xxx"}
 
 	p := c.Shorten(d)
@@ -91,9 +85,7 @@ func TestShortenerController_Redirect_WhenValidDTOShouldReturnPresenterWithRedir
 	teardownTest := setupShortenerControllerTest(t, s, nil)
 	defer teardownTest(t)
 
-	r := factory.NewShortenerRepository()
-	sr := factory.NewShortenerStatsRepository()
-	c := NewShortenerController(r, sr)
+	c := NewShortenerController()
 	d := dto.ShortenedDTO{ShortenedURL: s.HashedURL}
 
 	p := c.Redirect(d)
@@ -108,9 +100,7 @@ func TestShortenerController_Redirect_WhenInvaliDTOShouldReturnPresenterWithErro
 	teardownTest := setupShortenerControllerTest(t, nil, nil)
 	defer teardownTest(t)
 
-	r := factory.NewShortenerRepository()
-	sr := factory.NewShortenerStatsRepository()
-	c := NewShortenerController(r, sr)
+	c := NewShortenerController()
 	d := dto.ShortenedDTO{ShortenedURL: "xxx"}
 
 	p := c.Redirect(d)
@@ -125,9 +115,7 @@ func TestShortenerController_Redirect_WhenDoesNotExistShouldReturnPresenterWithE
 	teardownTest := setupShortenerControllerTest(t, nil, nil)
 	defer teardownTest(t)
 
-	r := factory.NewShortenerRepository()
-	sr := factory.NewShortenerStatsRepository()
-	c := NewShortenerController(r, sr)
+	c := NewShortenerController()
 	d := dto.ShortenedDTO{ShortenedURL: "validurl"}
 
 	p := c.Redirect(d)
@@ -144,9 +132,7 @@ func TestShortenerController_Stats_WhenValidDTOShouldReturnPresenterWithSuccessS
 	teardownTest := setupShortenerControllerTest(t, s, hashedURL)
 	defer teardownTest(t)
 
-	r := factory.NewShortenerRepository()
-	sr := factory.NewShortenerStatsRepository()
-	c := NewShortenerController(r, sr)
+	c := NewShortenerController()
 	d := dto.ShortenedDTO{ShortenedURL: hashedURL}
 
 	p := c.Stats(d)
@@ -161,9 +147,7 @@ func TestShortenerController_Stats_WhenInvalidDTOShouldReturnPresenterWithErrorA
 	teardownTest := setupShortenerControllerTest(t, nil, nil)
 	defer teardownTest(t)
 
-	r := factory.NewShortenerRepository()
-	sr := factory.NewShortenerStatsRepository()
-	c := NewShortenerController(r, sr)
+	c := NewShortenerController()
 	d := dto.ShortenedDTO{ShortenedURL: "xxx"}
 
 	p := c.Stats(d)
@@ -178,9 +162,7 @@ func TestShortenerController_Stats_WhenDoesNotExistShouldReturnPresenterWithErro
 	teardownTest := setupShortenerControllerTest(t, nil, nil)
 	defer teardownTest(t)
 
-	r := factory.NewShortenerRepository()
-	sr := factory.NewShortenerStatsRepository()
-	c := NewShortenerController(r, sr)
+	c := NewShortenerController()
 	d := dto.ShortenedDTO{ShortenedURL: "validurl"}
 
 	p := c.Stats(d)

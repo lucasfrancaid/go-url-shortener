@@ -7,7 +7,7 @@ URL Shortener implemented using Go with Clean Architecture as architecture desig
 * ✅ Environment settings with Viper
 * ⭕ Docker Image
 * 🔄 Docker Compose
-* ✅ Dependency Injection for Adapters (Improve it)
+* ✅ Dependency Injection for Adapters using Factory Pattern
 * ⭕ OpenAPI Documentation/Swagger
 * ⭕ CI&CD/Deploy
 

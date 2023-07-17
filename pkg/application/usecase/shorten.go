@@ -8,6 +8,7 @@ import (
 	"crypto/md5"
 
 	"github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/config"
+	factory "github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/factory/repository"
 	base "github.com/lucasfrancaid/go-url-shortener/pkg/application/base"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/domain"
@@ -15,12 +16,15 @@ import (
 )
 
 type ShortenUseCase struct {
-	shortenerRepository repository.ShortenerRepository
-	statsRepository     repository.ShortenerStatsRepository
+	ShortenerRepository repository.ShortenerRepository
+	StatsRepository     repository.ShortenerStatsRepository
 }
 
-func NewShortenUseCase(shortenerRepository repository.ShortenerRepository, statsRepository repository.ShortenerStatsRepository) ShortenUseCase {
-	return ShortenUseCase{shortenerRepository: shortenerRepository, statsRepository: statsRepository}
+func NewShortenUseCase() ShortenUseCase {
+	return ShortenUseCase{
+		ShortenerRepository: factory.NewShortenerRepository(),
+		StatsRepository:     factory.NewShortenerStatsRepository(),
+	}
 }
 
 func (u *ShortenUseCase) Do(d dto.ShortenDTO) (dto.ShortenedDTO, error) {
@@ -30,7 +34,7 @@ func (u *ShortenUseCase) Do(d dto.ShortenDTO) (dto.ShortenedDTO, error) {
 	}
 
 	shortenedURL := u.short(d.URL)
-	persisted, err := u.shortenerRepository.Read(shortenedURL)
+	persisted, err := u.ShortenerRepository.Read(shortenedURL)
 	if err == nil {
 		if persisted.URL == d.URL {
 			return u.toOutputDTO(persisted), nil
@@ -42,7 +46,7 @@ func (u *ShortenUseCase) Do(d dto.ShortenDTO) (dto.ShortenedDTO, error) {
 	}
 
 	entity := domain.Shortener{HashedURL: shortenedURL, URL: d.URL}
-	err = u.shortenerRepository.Add(entity)
+	err = u.ShortenerRepository.Add(entity)
 	if err != nil {
 		if baseErr, ok := err.(*base.Error); ok {
 			err = baseErr
@@ -52,7 +56,7 @@ func (u *ShortenUseCase) Do(d dto.ShortenDTO) (dto.ShortenedDTO, error) {
 		return dto.ShortenedDTO{}, err
 	}
 
-	u.statsRepository.Set(shortenedURL)
+	u.StatsRepository.Set(shortenedURL)
 
 	return u.toOutputDTO(entity), nil
 }

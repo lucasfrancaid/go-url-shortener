@@ -4,20 +4,16 @@ import (
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/dto"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/application/usecase"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/port/presenter"
-	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 )
 
-type ShortenerController struct {
-	shortenerRepository repository.ShortenerRepository
-	statsRepository     repository.ShortenerStatsRepository
-}
+type ShortenerController struct{}
 
-func NewShortenerController(shortenerRepository repository.ShortenerRepository, statsRepository repository.ShortenerStatsRepository) ShortenerController {
-	return ShortenerController{shortenerRepository: shortenerRepository, statsRepository: statsRepository}
+func NewShortenerController() ShortenerController {
+	return ShortenerController{}
 }
 
 func (c *ShortenerController) Shorten(d dto.ShortenDTO) presenter.Presenter {
-	u := usecase.NewShortenUseCase(c.shortenerRepository, c.statsRepository)
+	u := usecase.NewShortenUseCase()
 	r, err := u.Do(d)
 	if err != nil {
 		return presenter.PresenterError(err)
@@ -26,7 +22,7 @@ func (c *ShortenerController) Shorten(d dto.ShortenDTO) presenter.Presenter {
 }
 
 func (c *ShortenerController) Redirect(d dto.ShortenedDTO) presenter.Presenter {
-	u := usecase.NewRedirectUseCase(c.shortenerRepository, c.statsRepository)
+	u := usecase.NewRedirectUseCase()
 	r, err := u.Do(d)
 	if err != nil {
 		return presenter.PresenterError(err)
@@ -35,7 +31,7 @@ func (c *ShortenerController) Redirect(d dto.ShortenedDTO) presenter.Presenter {
 }
 
 func (c *ShortenerController) Stats(d dto.ShortenedDTO) presenter.Presenter {
-	u := usecase.NewStatsUseCase(c.statsRepository)
+	u := usecase.NewStatsUseCase()
 	r, err := u.Do(d)
 	if err != nil {
 		return presenter.PresenterError(err)
