@@ -28,6 +28,5 @@ External:
 * ✅ Redis
 
 ## To Do
-* ⭕ Improve adapter tests (run just when flaged to run, because generally is necessary to setup the infrastructure)
 * ⭕ Add tests for HTTP Adapters
 * ⭕ Add tests for Presenters

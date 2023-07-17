@@ -10,9 +10,9 @@ import (
 
 func NewShortenerRepository() repository.ShortenerRepository {
 	switch config.GetSettings().REPOSITORY_ADAPTER {
-	case "redis":
+	case config.RedisAdapter:
 		return redis.NewShortenerRepositoryRedis()
-	case "memcached":
+	case config.MemcachedAdapter:
 		return memcached.NewShortenerRepositoryMemcached()
 	default:
 		return in_memory.NewShortenerRepositoryInMemory()
@@ -21,9 +21,9 @@ func NewShortenerRepository() repository.ShortenerRepository {
 
 func NewShortenerStatsRepository() repository.ShortenerStatsRepository {
 	switch config.GetSettings().REPOSITORY_ADAPTER {
-	case "redis":
+	case config.RedisAdapter:
 		return redis.NewShortenerStatsRepositoryRedis()
-	case "memcached":
+	case config.MemcachedAdapter:
 		return memcached.NewShortenerStatsRepositoryMemcached()
 	default:
 		return in_memory.NewShortenerStatsRepositoryInMemory()

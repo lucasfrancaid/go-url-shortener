@@ -10,14 +10,15 @@ import (
 )
 
 type Settings struct {
-	ENV                string
-	PORT               string
-	DOMAIN             string
-	REPOSITORY_ADAPTER string
-	MEMCACHED_URL      string
-	REDIS_URL          string
-	REDIS_PASSWORD     string
-	REDIS_DB           int
+	ENV                     string
+	PORT                    string
+	DOMAIN                  string
+	REPOSITORY_ADAPTER      string
+	TEST_REPOSITORY_ADAPTER string
+	MEMCACHED_URL           string
+	REDIS_URL               string
+	REDIS_PASSWORD          string
+	REDIS_DB                int
 }
 
 var settings *Settings
@@ -43,14 +44,15 @@ func GetSettings() *Settings {
 	viper.SetDefault("REPOSITORY_ADAPTER", "in_memory")
 
 	settings = &Settings{
-		ENV:                viper.GetString("ENV"),
-		PORT:               viper.GetString("PORT"),
-		DOMAIN:             viper.GetString("DOMAIN"),
-		REPOSITORY_ADAPTER: viper.GetString("REPOSITORY_ADAPTER"),
-		MEMCACHED_URL:      viper.GetString("MEMCACHED_URL"),
-		REDIS_URL:          viper.GetString("REDIS_URL"),
-		REDIS_PASSWORD:     viper.GetString("REDIS_PASSWORD"),
-		REDIS_DB:           viper.GetInt("REDIS_DB"),
+		ENV:                     viper.GetString("ENV"),
+		PORT:                    viper.GetString("PORT"),
+		DOMAIN:                  viper.GetString("DOMAIN"),
+		REPOSITORY_ADAPTER:      viper.GetString("REPOSITORY_ADAPTER"),
+		TEST_REPOSITORY_ADAPTER: viper.GetString("TEST_REPOSITORY_ADAPTER"),
+		MEMCACHED_URL:           viper.GetString("MEMCACHED_URL"),
+		REDIS_URL:               viper.GetString("REDIS_URL"),
+		REDIS_PASSWORD:          viper.GetString("REDIS_PASSWORD"),
+		REDIS_DB:                viper.GetInt("REDIS_DB"),
 	}
 
 	if settings.DOMAIN == "" {

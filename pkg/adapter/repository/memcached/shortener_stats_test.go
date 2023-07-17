@@ -3,11 +3,16 @@ package adapter
 import (
 	"testing"
 
+	"github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/config"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 	"github.com/stretchr/testify/assert"
 )
 
 func setupShortenerStatsRepositoryMemcachedTest(tb testing.TB, d any) func(tb testing.TB) {
+	if config.GetSettings().TEST_REPOSITORY_ADAPTER != config.MemcachedAdapter {
+		tb.Skip()
+	}
+
 	r := NewShortenerStatsRepositoryMemcached()
 
 	if hashedURL, ok := d.(string); ok {
@@ -16,7 +21,9 @@ func setupShortenerStatsRepositoryMemcachedTest(tb testing.TB, d any) func(tb te
 	}
 
 	return func(tb testing.TB) {
-		r.Mc.DeleteAll()
+		if hashedURL, ok := d.(string); ok {
+			r.Mc.Delete(hashedURL)
+		}
 	}
 }
 

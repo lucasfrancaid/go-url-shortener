@@ -1,6 +1,7 @@
 {
     "PORT": 3000,
     "REPOSITORY_ADAPTER": "redis",
+    "TEST_REPOSITORY_ADAPTER": "in_memory",
     "MEMCACHED_URL": "localhost:11211",
     "REDIS_URL": "localhost:6379",
     "REDIS_PASSWORD": null,

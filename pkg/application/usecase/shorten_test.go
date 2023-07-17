@@ -22,7 +22,7 @@ func TestShortenUseCase_Do(t *testing.T) {
 	defer teardownTest(t)
 
 	u := NewShortenUseCase()
-	d := dto.ShortenDTO{URL: "https://lucasfrancaid.com.br"}
+	d := dto.ShortenDTO{URL: "https://lucasfrancaid.com.pt"}
 
 	res, err := u.Do(d)
 
@@ -35,7 +35,7 @@ func TestShortenUseCase_Do_WhenSuccessThenGetStatsShouldExist(t *testing.T) {
 	defer teardownTest(t)
 
 	u := NewShortenUseCase()
-	d := dto.ShortenDTO{URL: "https://github.com.br/lucasfrancaid"}
+	d := dto.ShortenDTO{URL: "https://github.com.br/lucasfrancaid123343"}
 
 	res, err := u.Do(d)
 	assert.Nil(t, err)

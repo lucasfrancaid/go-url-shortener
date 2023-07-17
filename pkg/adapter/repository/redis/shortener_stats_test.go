@@ -3,11 +3,16 @@ package adapter
 import (
 	"testing"
 
+	"github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/config"
 	"github.com/lucasfrancaid/go-url-shortener/pkg/port/repository"
 	"github.com/stretchr/testify/assert"
 )
 
 func setupShortenerStatsRepositoryRedisTest(tb testing.TB, d any) func(tb testing.TB) {
+	if config.GetSettings().TEST_REPOSITORY_ADAPTER != config.RedisAdapter {
+		tb.Skip()
+	}
+
 	r := NewShortenerStatsRepositoryRedis()
 
 	if hashedURL, ok := d.(string); ok {
@@ -16,7 +21,9 @@ func setupShortenerStatsRepositoryRedisTest(tb testing.TB, d any) func(tb testin
 	}
 
 	return func(tb testing.TB) {
-		r.Rdb.FlushAll(r.Ctx)
+		if hashedURL, ok := d.(string); ok {
+			r.Rdb.Del(r.Ctx, hashedURL).Err()
+		}
 	}
 }
 
