@@ -1,7 +1,6 @@
 package standard_router
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -26,15 +25,13 @@ func Redirect(w http.ResponseWriter, r *http.Request) {
 	res := pre.HTTP()
 
 	if pre.Error == nil {
-		var readDTO dto.RedirectDTO
-		err := json.Unmarshal(res.Data, &readDTO)
-		if err == nil {
-			http.Redirect(w, r, readDTO.URL, res.StatusCode)
+		if data, ok := res.Data.(dto.RedirectDTO); ok {
+			http.Redirect(w, r, data.URL, res.StatusCode)
 			return
 		}
 	}
 
 	w.WriteHeader(res.StatusCode)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(res.Data)
+	w.Write(res.JsonData)
 }

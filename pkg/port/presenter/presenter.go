@@ -21,29 +21,29 @@ const (
 
 type Presenter struct {
 	Headers    string
-	Data       []byte
+	Data       any
 	StatusCode status
 	Error      error
 }
 
-func PresenterSuccess(data any) Presenter {
-	j, err := json.Marshal(data)
+func (p *Presenter) ToJSON() ([]byte, error) {
+	j, err := json.Marshal(p.Data)
 	if err != nil {
-		return PresenterError(err)
+		return nil, err
 	}
+	return j, nil
+}
+
+func PresenterSuccess(data any) Presenter {
 	return Presenter{
-		Data:       j,
+		Data:       data,
 		StatusCode: SUCCESS_CODE,
 	}
 }
 
 func PresenterRedirect(data any) Presenter {
-	j, err := json.Marshal(data)
-	if err != nil {
-		return PresenterError(err)
-	}
 	return Presenter{
-		Data:       j,
+		Data:       data,
 		StatusCode: REDIRECT_CODE,
 	}
 }

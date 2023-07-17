@@ -39,5 +39,5 @@ func (c *ShortenerController) Stats(d dto.ShortenedDTO) presenter.Presenter {
 	if err != nil {
 		return presenter.PresenterError(err)
 	}
-	return presenter.PresenterRedirect(r)
+	return presenter.PresenterSuccess(r)
 }

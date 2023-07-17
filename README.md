@@ -16,7 +16,7 @@ Built-in:
 * ✅ net/http
 
 External:
-* ⭕ Echo
+* ✅ Echo
 * ⭕ Fiber
 
 ## Repository Adapters

@@ -1,9 +1,10 @@
 env ?= dev
 port ?= 3333
+adapter ?= standard
 
 http:
-	@echo "--> Starting HTTP Stantard Server"
-	@ENV=$(env) go run cmd/http/standard.go
+	@echo "--> Starting HTTP $(adapter) server"
+	@ENV=$(env) go run cmd/http/$(adapter)/main.go
 
 test:
 	@echo "--> Running Tests"

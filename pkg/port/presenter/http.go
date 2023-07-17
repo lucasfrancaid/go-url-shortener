@@ -6,8 +6,9 @@ import (
 )
 
 type PresenterHTTP struct {
+	Data       any
 	Headers    string `json:"headers"`
-	Data       []byte `json:"data"`
+	JsonData   []byte `json:"data"`
 	StatusCode int    `json:"statusCode"`
 }
 
@@ -27,16 +28,20 @@ type ErrorResponseHTTP struct {
 }
 
 func (p *Presenter) HTTP() PresenterHTTP {
-	var data []byte
+	var data any
+	var jsonData []byte
 	if p.Error != nil {
-		data, _ = json.Marshal(ErrorResponseHTTP{Error: p.Error.Error()})
+		data = ErrorResponseHTTP{Error: p.Error.Error()}
+		jsonData, _ = json.Marshal(data)
 	} else {
 		data = p.Data
+		jsonData, _ = p.ToJSON()
 	}
 
 	return PresenterHTTP{
-		Headers:    p.Headers,
 		Data:       data,
+		Headers:    p.Headers,
+		JsonData:   jsonData,
 		StatusCode: statusToHTTP[p.StatusCode],
 	}
 }

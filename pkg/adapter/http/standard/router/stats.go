@@ -26,5 +26,5 @@ func Stats(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(res.StatusCode)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(res.Data)
+	w.Write(res.JsonData)
 }
