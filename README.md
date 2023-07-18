@@ -8,24 +8,24 @@ URL Shortener implemented using Go with Clean Architecture as architecture desig
 * ✅ Docker Image
 * ✅ Docker Compose
 * ✅ Dependency Injection for Adapters using Factory Pattern
-* ✅ OpenAPI Documentation/Swagger with [Swaggo](https://github.com/swaggo/swag)
+* ✅ OpenAPI Documentation/Swagger with [Swag](https://github.com/swaggo/swag)
 * ⭕ CI&CD/Deploy
 
 ## Web Adapters
 Built-in:
-* ✅ [net/http](https://pkg.go.dev/net/http)
+* ✅ net/http [🔗](https://pkg.go.dev/net/http)
 
 External:
-* ✅ [Echo](https://github.com/labstack/echo)
-* ✅ [Fiber](https://github.com/gofiber/fiber)
+* ✅ Echo [🔗](https://github.com/labstack/echo)
+* ✅ Fiber [🔗](https://github.com/gofiber/fiber)
 
 ## Repository Adapters
 Built-in:
 * ✅ In Memory
 
 External:
-* ✅ [Memcached](https://github.com/bradfitz/gomemcache)
-* ✅ [Redis](https://github.com/redis/go-redis)
+* ✅ Memcached [🔗](https://github.com/bradfitz/gomemcache)
+* ✅ Redis [🔗](https://github.com/redis/go-redis)
 
 ## To Do
 * ⭕ Add tests for HTTP Adapters
