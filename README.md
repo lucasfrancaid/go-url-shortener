@@ -1,8 +1,6 @@
 # go-url-shortener
 URL Shortener implemented using Go with Clean Architecture as architecture design to structure the codebase and some adapters to switch by initiliazing command.
 
-![System Design Image](./assets/images/System%20Design%402x.png)
-
 ## Infrastructure
 * ✅ Environment settings with [Viper](https://github.com/spf13/viper)
 * ✅ Docker Image
@@ -91,3 +89,6 @@ Generate swagger documentation with swaggo/swag:
 ```bash
 make swagger bin=/home/go/bin/  # bin is optional, should be used if you have not installed swag global
 ```
+
+## Initial System Design
+![System Design Image](./assets/images/System%20Design%402x.png)
