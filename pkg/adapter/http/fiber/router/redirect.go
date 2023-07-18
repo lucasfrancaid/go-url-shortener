@@ -7,8 +7,8 @@ import (
 )
 
 func Redirect(c *fiber.Ctx) error {
-	shortenedURL := c.Params("shortenedURL")
-	d := dto.ShortenedDTO{ShortenedURL: shortenedURL}
+	hashedURL := c.Params("hashedURL")
+	d := dto.ShortenedDTO{ShortenedURL: hashedURL}
 
 	ctl := controller.NewShortenerController()
 	pre := ctl.Redirect(d)

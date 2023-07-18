@@ -9,6 +9,18 @@ import (
 	"github.com/lucasfrancaid/go-url-shortener/pkg/port/controller"
 )
 
+// Shorten godoc
+//
+//	@Summary		Shorten
+//	@Description	Shorten an URL
+//	@Tags			Shortener
+//	@Accept			json
+//	@Produce		json
+//	@Param			payload	body		dto.ShortenDTO	true	"URL to Shorten"
+//	@Success		200		{object}	dto.ShortenedDTO
+//	@Failure		422		{object}	presenter.ErrorResponseHTTP
+//	@Failure		500		{object}	presenter.ErrorResponseHTTP
+//	@Router			/shorten [post]
 func Shorten(w http.ResponseWriter, r *http.Request) {
 	if strings.ToUpper(r.Method) != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -30,7 +42,7 @@ func Shorten(w http.ResponseWriter, r *http.Request) {
 	pre := ctl.Shorten(payload)
 	res := pre.HTTP()
 
-	w.WriteHeader(res.StatusCode)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(res.StatusCode)
 	w.Write(res.JsonData)
 }

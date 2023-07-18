@@ -8,6 +8,19 @@ import (
 	"github.com/lucasfrancaid/go-url-shortener/pkg/port/controller"
 )
 
+// Redirect godoc
+//
+//	@Summary		Redirect
+//	@Description	Redirect a Shortened URL to Original URL
+//	@Tags			Shortener
+//	@Accept			json
+//	@Produce		json
+//	@Param			hashedURL	path	string	true	"Last block of Shortened URL, the value after /u/ part"
+//	@Success		303
+//	@Failure		404	{object}	presenter.ErrorResponseHTTP
+//	@Failure		422	{object}	presenter.ErrorResponseHTTP
+//	@Failure		500	{object}	presenter.ErrorResponseHTTP
+//	@Router			/u/{hashedURL} [get]
 func Redirect(w http.ResponseWriter, r *http.Request) {
 	if strings.ToUpper(r.Method) != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -29,7 +42,7 @@ func Redirect(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.WriteHeader(res.StatusCode)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(res.StatusCode)
 	w.Write(res.JsonData)
 }

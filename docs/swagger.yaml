@@ -1,0 +1,132 @@
+basePath: /
+definitions:
+  dto.ShortenDTO:
+    properties:
+      url:
+        type: string
+    type: object
+  dto.ShortenedDTO:
+    properties:
+      shortenedURL:
+        type: string
+    type: object
+  dto.ShortenerStatsDTO:
+    properties:
+      counter:
+        type: integer
+    type: object
+  presenter.ErrorResponseHTTP:
+    properties:
+      error:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Go URL Shortener implemented using Clean Architecture with Echo and
+    Fiber as HTTP Adapters.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: URL Shortener API
+  version: "1.0"
+paths:
+  /shorten:
+    post:
+      consumes:
+      - application/json
+      description: Shorten an URL
+      parameters:
+      - description: URL to Shorten
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ShortenDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ShortenedDTO'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponseHTTP'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponseHTTP'
+      summary: Shorten
+      tags:
+      - Shortener
+  /stats/{hashedURL}:
+    get:
+      consumes:
+      - application/json
+      description: Show statistics about a shortened URL
+      parameters:
+      - description: Last block of Shortened URL, the value after /u/ part
+        in: path
+        name: hashedURL
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ShortenerStatsDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponseHTTP'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponseHTTP'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponseHTTP'
+      summary: Stats
+      tags:
+      - Shortener
+  /u/{hashedURL}:
+    get:
+      consumes:
+      - application/json
+      description: Redirect a Shortened URL to Original URL
+      parameters:
+      - description: Last block of Shortened URL, the value after /u/ part
+        in: path
+        name: hashedURL
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "303":
+          description: See Other
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponseHTTP'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponseHTTP'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/presenter.ErrorResponseHTTP'
+      summary: Redirect
+      tags:
+      - Shortener
+swagger: "2.0"

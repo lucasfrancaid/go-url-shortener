@@ -6,8 +6,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	_ "github.com/lucasfrancaid/go-url-shortener/docs"
 	"github.com/lucasfrancaid/go-url-shortener/internal/pkg/infrastructure/config"
 	echo_router "github.com/lucasfrancaid/go-url-shortener/pkg/adapter/http/echo/router"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func NewEchoServer() {
@@ -20,6 +22,11 @@ func NewEchoServer() {
 		Output:           e.Logger.Output(),
 	}))
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+	}))
+
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.POST("/shorten", echo_router.Shorten)
 	e.GET("/u/:shortenedURL", echo_router.Redirect)
