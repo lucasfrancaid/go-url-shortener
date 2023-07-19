@@ -2,6 +2,7 @@ package presenter
 
 import (
 	"encoding/json"
+	"errors"
 
 	base "github.com/lucasfrancaid/go-url-shortener/pkg/application/base"
 )
@@ -62,6 +63,7 @@ func PresenterError(err error) Presenter {
 			statusCode = CUSTOM_ERROR_CODE
 		default:
 			statusCode = UNKNOWN_ERROR_CODE
+			err = errors.New("internal server error")
 		}
 	}
 	return Presenter{
